@@ -40,6 +40,11 @@ class MainFragment : Fragment(), ItemClickListener {
         return binding.root
     }
 
+    override fun onResume() {
+        viewModel.fetchData()
+        super.onResume()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -58,6 +63,10 @@ class MainFragment : Fragment(), ItemClickListener {
                     pictureOfDay?.let {
                         Picasso.with(requireContext()).load(it.url)
                             .into(binding.activityMainImageOfTheDay)
+                        binding.activityMainImageOfTheDay.contentDescription = pictureOfDay.title
+                    } ?: run {
+                        binding.activityMainImageOfTheDay.contentDescription =
+                            context?.getString(R.string.error_fetching_image)
                     }
                 }
             }

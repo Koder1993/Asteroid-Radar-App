@@ -24,8 +24,9 @@ object AsteroidApi {
     }
 
     suspend fun getAsteroids(): List<Asteroid> {
-        val asteroids = asteroidRetrofitService.getAllAsteroids("", "", NetworkConstants.API_KEY)
-        return parseAsteroidsJsonResult(JSONObject(asteroids))
+        val asteroidsJsonResult =
+            asteroidRetrofitService.getAllAsteroids("", "", NetworkConstants.API_KEY)
+        return parseAsteroidsJsonResult(JSONObject(asteroidsJsonResult))
     }
 
     suspend fun getPictureOfDay() =

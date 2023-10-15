@@ -3,6 +3,7 @@ package com.udacity.asteroidradar.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.udacity.asteroidradar.Asteroid
+import com.udacity.asteroidradar.Result
 import com.udacity.asteroidradar.repository.AsteroidRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -30,7 +31,7 @@ class MainViewModel @Inject constructor(
 
     private var job: Job? = null
 
-    init {
+    fun fetchData() {
         refreshAsteroidsData()
         getPictureOfDay()
         observeAsteroidList()
@@ -56,7 +57,10 @@ class MainViewModel @Inject constructor(
     private fun getPictureOfDay() {
         viewModelScope.launch {
             _pictureOfDayUiState.value =
-                PictureOfDayData(true, asteroidRepository.getPictureOfDay())
+                when (val pictureOfDayResult = asteroidRepository.getPictureOfDay()) {
+                    is Result.Success -> PictureOfDayData(true, pictureOfDayResult.data)
+                    else -> PictureOfDayData(false, null)
+                }
         }
     }
 
